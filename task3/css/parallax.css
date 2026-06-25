@@ -1,0 +1,490 @@
+/* ============================================================
+   TASK 3 — INTERACTIVE PARALLAX
+   Multi-layer scroll & mouse parallax + Robot Pet
+   ============================================================ */
+
+/* ── Parallax Hero ── */
+.parallax-hero {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-primary);
+}
+
+/* ── Parallax Layers ── */
+.parallax-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  will-change: transform;
+  transition: transform 0.05s linear;
+}
+
+.parallax-content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: var(--space-6) var(--space-3);
+  max-width: 700px;
+  will-change: transform;
+}
+
+/* ── Layer 1: Stars ── */
+.parallax-stars {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, rgba(168, 85, 247, 0.8), transparent),
+    radial-gradient(1px 1px at 30% 60%, rgba(232, 121, 249, 0.6), transparent),
+    radial-gradient(1.5px 1.5px at 50% 10%, rgba(196, 181, 253, 0.9), transparent),
+    radial-gradient(1px 1px at 70% 80%, rgba(168, 85, 247, 0.7), transparent),
+    radial-gradient(1px 1px at 90% 40%, rgba(232, 121, 249, 0.5), transparent),
+    radial-gradient(1.5px 1.5px at 15% 85%, rgba(196, 181, 253, 0.8), transparent),
+    radial-gradient(1px 1px at 45% 45%, rgba(168, 85, 247, 0.6), transparent),
+    radial-gradient(1px 1px at 80% 15%, rgba(232, 121, 249, 0.7), transparent),
+    radial-gradient(1.5px 1.5px at 25% 35%, rgba(196, 181, 253, 0.5), transparent),
+    radial-gradient(1px 1px at 60% 70%, rgba(168, 85, 247, 0.8), transparent),
+    radial-gradient(1px 1px at 5% 55%, rgba(232, 121, 249, 0.6), transparent),
+    radial-gradient(1px 1px at 95% 90%, rgba(196, 181, 253, 0.7), transparent),
+    radial-gradient(1.5px 1.5px at 35% 5%, rgba(168, 85, 247, 0.9), transparent),
+    radial-gradient(1px 1px at 75% 50%, rgba(232, 121, 249, 0.5), transparent),
+    radial-gradient(1px 1px at 55% 95%, rgba(196, 181, 253, 0.8), transparent);
+  background-size: 100% 100%;
+  opacity: 0.7;
+}
+
+/* ── Layer 2: Grid Floor ── */
+.parallax-grid-floor {
+  position: absolute;
+  bottom: 0;
+  left: -20%;
+  right: -20%;
+  height: 60%;
+  background-image:
+    linear-gradient(rgba(168, 85, 247, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(168, 85, 247, 0.12) 1px, transparent 1px);
+  background-size: 60px 60px;
+  transform: perspective(500px) rotateX(60deg);
+  transform-origin: bottom center;
+  mask-image: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 80%);
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 80%);
+}
+
+/* ── Layer 3: Orbs ── */
+.parallax-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+.parallax-orb-1 {
+  width: 350px;
+  height: 350px;
+  background: var(--color-cyan);
+  opacity: 0.15;
+  top: 15%;
+  left: 10%;
+}
+
+.parallax-orb-2 {
+  width: 280px;
+  height: 280px;
+  background: var(--color-violet);
+  opacity: 0.12;
+  bottom: 20%;
+  right: 10%;
+}
+
+/* ── Layer 4: Particles ── */
+.parallax-particles {
+  position: absolute;
+  inset: 0;
+}
+
+.parallax-particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* ── Layer Cards ── */
+.layers-showcase {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+  margin-top: var(--space-8);
+}
+
+.layer-card {
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  position: relative;
+}
+
+.layer-card-num {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: var(--space-2);
+  opacity: 0.7;
+}
+
+/* ── Depth Section ── */
+.section-depth {
+  position: relative;
+  padding: var(--space-20) 0;
+  overflow: hidden;
+}
+
+.depth-parallax-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 30% 50%, rgba(109, 40, 217, 0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 70% 60%, rgba(168, 85, 247, 0.1) 0%, transparent 55%),
+    linear-gradient(180deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 50%, var(--color-bg-primary) 100%);
+  will-change: transform;
+  transition: transform 0.05s linear;
+}
+
+/* ============================================================
+   ROBOT PET — Pixel Art Style
+   ============================================================ */
+.robot-pet {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 9000;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: filter 0.3s ease;
+}
+
+.robot-pet:active {
+  cursor: grabbing;
+}
+
+.robot-body {
+  position: relative;
+  width: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Antenna */
+.robot-antenna {
+  width: 4px;
+  height: 10px;
+  background: var(--color-cyan);
+  border-radius: 2px;
+  position: relative;
+  box-shadow: 0 0 6px var(--color-cyan);
+}
+
+.robot-antenna::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  background: var(--color-cyan);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--color-cyan);
+  animation: antennaPulse 2s ease-in-out infinite;
+}
+
+@keyframes antennaPulse {
+  0%, 100% { opacity: 1; transform: translateX(-50%) scale(1); }
+  50% { opacity: 0.6; transform: translateX(-50%) scale(1.3); }
+}
+
+/* Head */
+.robot-head {
+  width: 48px;
+  height: 36px;
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  border: 2px solid var(--color-cyan);
+  border-radius: 8px 8px 4px 4px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.3), inset 0 0 10px rgba(168, 85, 247, 0.1);
+}
+
+/* Eyes */
+.robot-eye {
+  width: 10px;
+  height: 10px;
+  background: var(--color-cyan);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--color-cyan);
+  transition: all 0.3s ease;
+}
+
+/* Happy mouth */
+.robot-mouth {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 8px;
+  border: 2px solid var(--color-cyan);
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  transition: all 0.3s ease;
+}
+
+/* Angry state */
+.robot-pet.angry .robot-eye {
+  background: #ef4444;
+  box-shadow: 0 0 10px #ef4444;
+  animation: eyeFlicker 0.15s ease-in-out infinite alternate;
+}
+
+.robot-pet.angry .robot-head {
+  border-color: #ef4444;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.4), inset 0 0 10px rgba(239, 68, 68, 0.1);
+}
+
+.robot-pet.angry .robot-mouth {
+  width: 14px;
+  height: 8px;
+  border: 2px solid #ef4444;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  bottom: 4px;
+}
+
+.robot-pet.angry .robot-antenna::before {
+  background: #ef4444;
+  box-shadow: 0 0 10px #ef4444;
+  animation: antennaAngry 0.4s ease-in-out infinite;
+}
+
+.robot-pet.angry .robot-antenna {
+  background: #ef4444;
+  box-shadow: 0 0 6px #ef4444;
+}
+
+@keyframes eyeFlicker {
+  from { opacity: 0.7; }
+  to { opacity: 1; }
+}
+
+@keyframes antennaAngry {
+  0%, 100% { transform: translateX(-50%) scale(1); }
+  50% { transform: translateX(-50%) scale(1.5); }
+}
+
+/* Resting / Zzz state */
+.robot-pet.resting .robot-eye {
+  height: 3px;
+  border-radius: 2px;
+  opacity: 0.5;
+}
+
+.robot-pet.resting .robot-body {
+  animation: robotNod 2s ease-in-out infinite;
+}
+
+@keyframes robotNod {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-3deg); }
+  75% { transform: rotate(3deg); }
+}
+
+/* Typing state */
+.robot-pet.typing .robot-arm-right {
+  animation: robotType 0.3s ease-in-out infinite alternate;
+}
+
+.robot-pet.typing .robot-mouth {
+  animation: robotMouthType 0.2s ease-in-out infinite alternate;
+}
+
+.robot-pet.typing .robot-head {
+  animation: robotHeadType 0.4s ease-in-out infinite alternate;
+}
+
+@keyframes robotType {
+  from { transform: rotate(-10deg); }
+  to { transform: rotate(10deg); }
+}
+
+@keyframes robotMouthType {
+  from { height: 4px; }
+  to { height: 8px; }
+}
+
+@keyframes robotHeadType {
+  from { transform: rotate(-2deg); }
+  to { transform: rotate(2deg); }
+}
+
+/* Torso */
+.robot-torso {
+  width: 36px;
+  height: 24px;
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  border: 2px solid var(--color-violet);
+  border-radius: 4px;
+  margin-top: -1px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.robot-heart {
+  width: 8px;
+  height: 8px;
+  background: var(--color-violet);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--color-violet);
+  animation: heartBeat 1.5s ease-in-out infinite;
+}
+
+@keyframes heartBeat {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.7; }
+}
+
+/* Arms */
+.robot-arm {
+  width: 8px;
+  height: 20px;
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  border: 2px solid var(--color-gold);
+  border-radius: 4px;
+  position: absolute;
+  top: 42px;
+  transition: transform 0.3s ease;
+}
+
+.robot-arm-left {
+  left: -2px;
+  transform: rotate(15deg);
+  transform-origin: top center;
+}
+
+.robot-arm-right {
+  right: -2px;
+  transform: rotate(-15deg);
+  transform-origin: top center;
+}
+
+/* Legs */
+.robot-leg {
+  width: 10px;
+  height: 14px;
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  border: 2px solid var(--color-cyan);
+  border-radius: 0 0 4px 4px;
+  margin-top: -1px;
+}
+
+.robot-leg-left { margin-right: 2px; }
+.robot-leg-right { margin-left: 2px; }
+
+/* Shadow */
+.robot-shadow {
+  width: 50px;
+  height: 6px;
+  background: rgba(168, 85, 247, 0.3);
+  border-radius: 50%;
+  margin: 2px auto 0;
+  filter: blur(3px);
+  transition: all 0.3s ease;
+}
+
+.robot-pet.angry .robot-shadow {
+  background: rgba(239, 68, 68, 0.3);
+}
+
+/* Label */
+.robot-label {
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  color: var(--color-cyan);
+  text-align: center;
+  margin-top: 4px;
+  animation: labelBounce 2s ease-in-out infinite;
+  opacity: 0.8;
+}
+
+.robot-pet.angry .robot-label {
+  color: #ef4444;
+  content: 'STOP IT!';
+}
+
+@keyframes labelBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+/* Float idle animation */
+.robot-pet:not(:active):not(.angry):not(.resting) .robot-body {
+  animation: robotFloat 3s ease-in-out infinite;
+}
+
+@keyframes robotFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .layers-showcase {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .layers-showcase {
+    grid-template-columns: 1fr;
+  }
+
+  .parallax-orb-1 { width: 200px; height: 200px; }
+  .parallax-orb-2 { width: 160px; height: 160px; }
+  .parallax-grid-floor { background-size: 40px 40px; }
+
+  .robot-pet {
+    bottom: 16px;
+    right: 16px;
+    transform: scale(0.8);
+    transform-origin: bottom right;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .parallax-layer,
+  .parallax-content,
+  .depth-parallax-bg {
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .robot-pet,
+  .robot-pet .robot-body,
+  .robot-pet .robot-eye,
+  .robot-pet .robot-mouth,
+  .robot-pet .robot-antenna::before,
+  .robot-pet .robot-heart {
+    animation: none !important;
+  }
+}
